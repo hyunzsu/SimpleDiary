@@ -28,7 +28,6 @@ import { useState, useRef } from 'react';
 // ];
 
 function App() {
-
   const [data, setData] = useState([]) // 일기 없는 상태로 시작할거니까 빈배열, 일기상태변화함수 - setData
 
   // id 추가하는거 useRef 이용
@@ -36,7 +35,7 @@ function App() {
 
   const onCreate = (author, content, emotion) => {
     const created_date = new Date().getTime(); // 현재시간 구해버려
-    // 새로운 일기아이템으로 추가되어야 하는 것
+    // 새로운 일기아이템으로 추가해야 하는 것
     const newItem = {
       author, 
       content,
@@ -48,10 +47,16 @@ function App() {
     setData([newItem, ...data]) // 원래 배열에 있던 데이터들을 하나하나 나열, 새로 추가할 일기 newItem은 위로 보내야하니까 먼저 씀
   }
 
+  const onDelete = (targetId) => {
+    console.log(`${targetId}가 삭제되었습니다`);
+    const newDiaryList = data.filter((it)=> it.id !== targetId);
+    setData(newDiaryList)
+  }
+
   return (
     <div className='App'>
       <DiaryEditor onCreate={onCreate}/>
-      <DiaryList diaryList={data}/>   
+      <DiaryList onDelete={onDelete} diaryList={data}/>   
     </div>
   );
 }

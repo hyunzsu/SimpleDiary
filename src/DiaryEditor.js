@@ -17,11 +17,11 @@ const DiaryEditor = ({onCreate}) => {
 
   // onClick 이벤트에 걸어주는 함수 2개니까 하나로 만들자
   const handleChangeState = (e) => {
-    // console.log(e.target.name);
-    // console.log(e.target.value);
+    // console.log(e.target.name); // author
+    // console.log(e.target.value); // 입력하는 값
     setState({
       ...state,
-      [e.target.name]: e.target.value, // 작성자와 본문 번갈아가면서 업데이트
+      [e.target.name]: e.target.value, // 작성자와 본문 번갈아가면서 업데이트! 새로운 객체를 만들어서, 새 객체에 변화를 주어야 함
     });
   };
 
@@ -37,9 +37,9 @@ const DiaryEditor = ({onCreate}) => {
       return;
     }
     
-    onCreate(state.author, state.content, state.emotion) // 새로 추가시키는 일기
+    onCreate(state.author, state.content, state.emotion) // 새로 추가하는 일기
     alert('저장 성공!')
-    // 기본값으로 초기화
+    // 일기 작성하고, 기본값으로 초기화
     setState({
       author: '',
       content: '',
