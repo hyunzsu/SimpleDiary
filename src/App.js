@@ -47,9 +47,12 @@ function App() {
     setData([newItem, ...data]) // 원래 배열에 있던 데이터들을 하나하나 나열, 새로 추가할 일기 newItem은 위로 보내야하니까 먼저 씀
   }
 
-  const onDelete = (targetId) => {
+  // 원본 data 삭제하는 함수
+  // App 컴포넌트에서 직접 onDelete 호출하는 것이 아니기 때문에 어떤 아이디를 갖고있는 요소를 지우길 원하는지 매개변수로 받음 -> targetId
+  const onDelete = (targetId) => { 
     console.log(`${targetId}가 삭제되었습니다`);
-    const newDiaryList = data.filter((it)=> it.id !== targetId);
+    const newDiaryList = data.filter((it)=> it.id !== targetId); // 지금 클릭한거 제외하고 filter
+    // console.log(newDiaryList);
     setData(newDiaryList)
   }
 
