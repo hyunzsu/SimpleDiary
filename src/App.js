@@ -1,38 +1,43 @@
 import './App.css';
 import DiaryEditor from './DiaryEditor';
 import DiaryList from './DiaryList';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Lifecycle from './Lifecycle';
 
-// const dummyList = [
-//   {
-//     id: 1,
-//     author: '현지수',
-//     content: '하이 1',
-//     emotion: 5,
-//     created_date: new Date().getTime(), // 현재 시간 기준으로 생성
-//   },
-//   {
-//     id: 2,
-//     author: '박윤하',
-//     content: '하이 2',
-//     emotion: 3,
-//     created_date: new Date().getTime(), // 현재 시간 기준으로 생성
-//   },
-//   {
-//     id: 3,
-//     author: '김연주',
-//     content: '하이 3',
-//     emotion: 1,
-//     created_date: new Date().getTime(), // 현재 시간 기준으로 생성
-//   }
-// ];
+// https://jsonplaceholder.typicode.com/comments
 
 function App() {
   const [data, setData] = useState([]); // 일기 없는 상태로 시작할거니까 빈배열, 일기상태변화함수 - setData
 
   // id 추가하는거 useRef 이용
   const dataId = useRef(0); // 초기값 0 설정
+
+  // API를 호출하는 getData 함수
+  // 원하는 json 값들만 뽑아서 가져옴 - fetch, async await 이용
+  const getData = async () => {
+    const res = await fetch(
+      'https://jsonplaceholder.typicode.com/comments'
+    ).then((res) => res.json());
+
+    // 0~19까지 자르고 모든 배열 순회
+    // 배열을 각각 순회해서 map함수의 콜백함수 안에서 리턴하는 값들을 모아 배열을 만들어 initData에 넣겠다
+    const initData = res.slice(0, 20).map((it) => {
+      return {
+        author: it.email,
+        content: it.body,
+        emotion: Math.floor(Math.random() * 5) + 1,
+        created_date: new Date().getTime(),
+        id: dataId.current++,
+      };
+    });
+
+    setData(initData); // 일기데이터 초기값 설정
+  };
+
+  // 컴포넌트 mount 시점에 API를 호출하는 getData를 전달해줌
+  useEffect(() => {
+    getData();
+  }, []);
 
   const onCreate = (author, content, emotion) => {
     const created_date = new Date().getTime(); // 현재시간 구해버려
@@ -61,14 +66,14 @@ function App() {
   const onEdit = (targetId, newContent) => {
     setData(
       data.map((it) =>
-        it.id === targetId ? { ...it, content: newContent } : it 
+        it.id === targetId ? { ...it, content: newContent } : it
       )
     );
   };
 
   return (
     <div className='App'>
-      <Lifecycle/>
+      <Lifecycle />
       <DiaryEditor onCreate={onCreate} />
       <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
     </div>
