@@ -1,10 +1,8 @@
 import './App.css';
 import DiaryEditor from './DiaryEditor';
 import DiaryList from './DiaryList';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import Lifecycle from './Lifecycle';
-
-// https://jsonplaceholder.typicode.com/comments
 
 function App() {
   const [data, setData] = useState([]); // 일기 없는 상태로 시작할거니까 빈배열, 일기상태변화함수 - setData
@@ -71,10 +69,33 @@ function App() {
     );
   };
 
+  // 일기분석결과 함수. emotion: 1 -> 기분 안좋음, 5 -> 기분 좋음
+  // useMemo 이용 - 연산의 최적화
+  const getDiaryAnalysis = useMemo(
+    () => {
+    console.log('일기 분석 시작');
+
+    // 기분 세는 함수
+    // 배열의 원소중에 emotion이 3 이상인것만 추려서 새로운 배열로 만들고, 그것들의 길이를 구함 => 기분 좋은 갯수
+    const goodCount = data.filter((it) => it.emotion >= 3).length;
+    const badCount = data.length - goodCount;
+    const goodRatio = (goodCount / data.length) * 100;
+
+    return { goodCount, badCount, goodRatio };
+  },[data.length]);
+
+  // 지역함수로 만든 getDiaryAnalysis 리턴 전에 호출
+  // 함수로 호출한거 객체로 반환됨, 똑같이 객체로 구조분해할당
+  const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
+
   return (
     <div className='App'>
       <Lifecycle />
       <DiaryEditor onCreate={onCreate} />
+      <div>전체 일기 : {data.length}</div>
+      <div>기분 좋은 일기 개수 : {goodCount}</div>
+      <div>기분 나쁜 일기 개수 : {badCount}</div>
+      <div>기분 좋은 일기 비율 : {goodRatio}</div>
       <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
     </div>
   );
