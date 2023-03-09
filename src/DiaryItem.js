@@ -28,7 +28,8 @@ const DiaryItem = ({
     }
   };
 
-  // 수정상태에서 나간다
+  // 수정취소 누르고 다시 수정하기 누르면 원래의 값으로 되돌아 옴 => 어떻게 해결..?
+  // 해결: 수정하기 -> 수정 후 수정취소 -> 수정하기 버튼에서 초기화 됨
   const handleQutiEdit = () => {
     setIsEdit(false)
     setLocalContent(content)
@@ -37,7 +38,7 @@ const DiaryItem = ({
   // 수정완료 눌렀을 때 실행하는 함수
   const handleEdit = () => {
     if (localContent.length < 5) {
-      localContentInput.current.focus(); // 5글자 이하면 focus
+      localContentInput.current.focus(); // 5글자 이하면 수정폼(textarea)에 focus
       return;
     }
 
