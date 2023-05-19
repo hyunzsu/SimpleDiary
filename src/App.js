@@ -51,25 +51,22 @@ function App() {
     };
     dataId.current += 1; // 다음 일기 id는 1을 가져야 하니까 증가시킴
     setData((data) => [newItem, ...data]); // 원래 배열에 있던 데이터들을 하나하나 나열, 새로 추가할 일기 newItem은 위로 보내야하니까 먼저 씀
-  },[]);
+  }, []);
 
   // 원본 data 삭제하는 함수
   // App 컴포넌트에서 직접 onDelete 호출하는 것이 아니기 때문에 어떤 아이디를 갖고있는 요소를 지우길 원하는지 매개변수로 받음 -> targetId
-  const onRemove = (targetId) => {
-    // console.log(`${targetId}가 삭제되었습니다`);
-    const newDiaryList = data.filter((it) => it.id !== targetId); // 지금 클릭한거 제외하고 filter
-    // console.log(newDiaryList);
-    setData(newDiaryList);
-  };
+  const onRemove = useCallback((targetId) => {
+    setData((data) => data.filter((it) => it.id !== targetId));
+  }, []);
 
   // 매개변수로 뭘 어떻게 수정할지 받아와야 함
-  const onEdit = (targetId, newContent) => {
-    setData(
+  const onEdit = useCallback((targetId, newContent) => {
+    setData((data) =>
       data.map((it) =>
         it.id === targetId ? { ...it, content: newContent } : it
       )
     );
-  };
+  },[]);
 
   // 일기분석결과 함수. emotion: 1 -> 기분 안좋음, 5 -> 기분 좋음
   // useMemo 이용 - 연산의 최적화

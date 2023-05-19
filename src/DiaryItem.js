@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 const DiaryItem = ({
   author,
@@ -9,11 +9,15 @@ const DiaryItem = ({
   onRemove,
   onEdit,
 }) => {
+  
+  useEffect(() => {
+    console.log(`${id}번 아이템 렌더!`);
+  });
 
   // 수정폼 5글자 이하면 focus 하기 위해 useRef 사용
   const localContentInput = useRef();
 
-  // isEdit - true, false 수정중인지 수정중이 아닌지 값을 보관해둠. 
+  // isEdit - true, false 수정중인지 수정중이 아닌지 값을 보관해둠.
   // true -> jsx에서 수정중으로 간주, false -> 지금처럼 컨텐츠, 삭제, 수정 버튼 렌더
   const [isEdit, setIsEdit] = useState(false);
   const togleIsEdit = () => setIsEdit(!isEdit); // 호출되는 순간 원래 isEdit이 가지고 있는 값을 반전시킴
@@ -31,9 +35,9 @@ const DiaryItem = ({
   // 수정취소 누르고 다시 수정하기 누르면 원래의 값으로 되돌아 옴 => 어떻게 해결..?
   // 해결: 수정하기 -> 수정 후 수정취소 -> 수정하기 버튼에서 초기화 됨
   const handleQutiEdit = () => {
-    setIsEdit(false)
-    setLocalContent(content)
-  }
+    setIsEdit(false);
+    setLocalContent(content);
+  };
 
   // 수정완료 눌렀을 때 실행하는 함수
   const handleEdit = () => {
@@ -42,12 +46,12 @@ const DiaryItem = ({
       return;
     }
 
-    if (window.confirm(`${id}번 째 일기를 수정하시겠습니까?`)) { // 아이템 수정하기전에 물어봐줌
-      onEdit(id, localContent)
-      togleIsEdit() // 수정폼 닫아줌
+    if (window.confirm(`${id}번 째 일기를 수정하시겠습니까?`)) {
+      // 아이템 수정하기전에 물어봐줌
+      onEdit(id, localContent);
+      togleIsEdit(); // 수정폼 닫아줌
     }
-
-  }
+  };
 
   return (
     <div className='DiaryItem'>
@@ -87,6 +91,6 @@ const DiaryItem = ({
   );
 };
 
-export default DiaryItem;
+export default React.memo(DiaryItem);
 
 // true라면 수정중인 jsx, false라면 지금 값 content

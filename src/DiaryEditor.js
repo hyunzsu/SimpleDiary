@@ -1,11 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
-const DiaryEditor = ({onCreate}) => {
-
-  useEffect(() => {
-    console.log('DiaryEditor 렌더');
-  })
-
+const DiaryEditor = ({ onCreate }) => {
   // useRef 이용
   const authorInput = useRef();
   const contentInput = useRef();
@@ -35,21 +30,21 @@ const DiaryEditor = ({onCreate}) => {
       authorInput.current.focus(); // focus 이용
       return;
     }
-    
+
     if (state.content.length < 5) {
       contentInput.current.focus(); // focus 이용
       return;
     }
-    
-    onCreate(state.author, state.content, state.emotion) // 새로 추가하는 일기
-    alert('저장 성공!')
+
+    onCreate(state.author, state.content, state.emotion); // 새로 추가하는 일기
+    alert('저장 성공!');
     // 일기 작성하고, 기본값으로 초기화
     setState({
       author: '',
       content: '',
-      emotion: 1
-    })
-  }
+      emotion: 1,
+    });
+  };
 
   return (
     <div className='DiaryEditor'>
@@ -91,5 +86,4 @@ const DiaryEditor = ({onCreate}) => {
 };
 
 export default React.memo(DiaryEditor);
-
 // React.memo로 묶인 DiaryEditor를 밖으로 꺼내겠다
