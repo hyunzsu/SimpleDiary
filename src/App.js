@@ -1,7 +1,13 @@
 import './App.css';
 import DiaryEditor from './DiaryEditor';
 import DiaryList from './DiaryList';
-import { useRef, useEffect, useMemo, useCallback, useReducer } from 'react';
+import React, {
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+  useReducer,
+} from 'react';
 // import Lifecycle from './Lifecycle';
 // import OptimizeTest from './OptimizeTest';
 
@@ -32,9 +38,12 @@ const reducer = (state, action) => {
   }
 };
 
+export const DiaryStateContext = React.createContext();
+
+export const DiaryDispatchContext = React.createContext();
+
 function App() {
   // const [data, setData] = useState([]); // 일기 없는 상태로 시작할거니까 빈배열, 일기상태변화함수 - setData
-
   const [data, dispatch] = useReducer(reducer, []);
 
   // id 추가하는거 useRef 이용
@@ -95,6 +104,10 @@ function App() {
     ); */
   }, []);
 
+  const memoizedDispatches = useMemo(() => {
+    return { onCreate, onRemove, onEdit };
+  }, []);
+
   // 일기분석결과 함수. emotion: 1 -> 기분 안좋음, 5 -> 기분 좋음
   // useMemo 이용 - 연산의 최적화
   const getDiaryAnalysis = useMemo(() => {
@@ -114,16 +127,20 @@ function App() {
   const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
 
   return (
-    <div className='App'>
-      {/* <Lifecycle /> */}
-      {/* <OptimizeTest/> */}
-      <DiaryEditor onCreate={onCreate} />
-      <div>전체 일기 : {data.length}</div>
-      <div>기분 좋은 일기 개수 : {goodCount}</div>
-      <div>기분 나쁜 일기 개수 : {badCount}</div>
-      <div>기분 좋은 일기 비율 : {goodRatio}</div>
-      <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
-    </div>
+    <DiaryStateContext.Provider value={data}>
+      <DiaryDispatchContext.Provider value={memoizedDispatches}>
+        <div className='App'>
+          {/* <Lifecycle /> */}
+          {/* <OptimizeTest/> */}
+          <DiaryEditor onCreate={onCreate} />
+          <div>전체 일기 : {data.length}</div>
+          <div>기분 좋은 일기 개수 : {goodCount}</div>
+          <div>기분 나쁜 일기 개수 : {badCount}</div>
+          <div>기분 좋은 일기 비율 : {goodRatio}</div>
+          <DiaryList onEdit={onEdit} onRemove={onRemove} />
+        </div>
+      </DiaryDispatchContext.Provider>
+    </DiaryStateContext.Provider>
   );
 }
 

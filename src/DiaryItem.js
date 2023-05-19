@@ -1,18 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useContext } from 'react';
+import { DiaryDispatchContext } from './App';
 
-const DiaryItem = ({
-  author,
-  content,
-  created_date,
-  emotion,
-  id,
-  onRemove,
-  onEdit,
-}) => {
-  
-  useEffect(() => {
-    console.log(`${id}번 아이템 렌더!`);
-  });
+const DiaryItem = ({ author, content, created_date, emotion, id }) => {
+  const { onRemove, onEdit } = useContext(DiaryDispatchContext);
 
   // 수정폼 5글자 이하면 focus 하기 위해 useRef 사용
   const localContentInput = useRef();
